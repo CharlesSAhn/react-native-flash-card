@@ -1,4 +1,4 @@
-import { DECK_ACTIONS } from '../action'
+import { DECK_ACTIONS, LAST_QUIZ_DATE } from '../action'
 
 
 const initialState = {
@@ -6,13 +6,19 @@ const initialState = {
 
 function decks(state = initialState, action){
 
-    const { decks } = action;
+    const { decks, time } = action;
 
     switch (action.type){
         case DECK_ACTIONS:
             return {
                 ...state,
                 ...decks
+            }
+
+        case LAST_QUIZ_DATE:
+            return {
+                ...state,
+                ...time
             }
 
         default:

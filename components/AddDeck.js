@@ -32,7 +32,12 @@ class AddDeck extends Component {
         saveDeckTitle({ key, data }).then(() => {
             this.props.dispatch(deckAction(decks));
             this.setState(() => ({ title: null}));
-            this.props.navigation.goBack();
+
+            this.props.navigation.navigate(
+                'DeckDetail',
+                { deckTitle: key}
+            )
+
         });
 
 

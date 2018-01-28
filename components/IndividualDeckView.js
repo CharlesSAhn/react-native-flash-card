@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity  } from 'react-native'
 import { connect } from 'react-redux'
 import { gray, red, green } from '../utils/colors'
-
+import { quizTimeTrack } from '../action'
 
 class IndividualDeckView extends Component {
 
@@ -33,6 +33,7 @@ class IndividualDeckView extends Component {
         else{
             this.setState(() => ({correctAnswer: this.state.correctAnswer + 1}));
             this.setState(() => ({finishMode: true}));
+            this.props.dispatch(quizTimeTrack(new Date().getDay()));
         }
 
     }
@@ -44,7 +45,25 @@ class IndividualDeckView extends Component {
         }
        else{
             this.setState(() => ({finishMode: true}));
+            this.props.dispatch(quizTimeTrack(new Date().getDay()));
         }
+    }
+
+    startOver = () => {
+        const { deckTitle } = this.props.navigation.state.params;
+
+        this.props.navigation.navigate(
+            'IndividualDeckDetail',
+            { deckTitle: deckTitle}
+        )
+    }
+
+    backToDeckView = () => {
+        const { deckTitle } = this.props.navigation.state.params;
+        this.props.navigation.navigate(
+            'DeckDetail',
+            { deckTitle: deckTitle}
+        )
     }
 
 
@@ -101,8 +120,20 @@ class IndividualDeckView extends Component {
                 }
                 {
                     finishMode && (
-                        <View>
-                            <Text>Correctly answered {correctAnswer } out of { questions.length }. </Text>
+                        <View style={styles.questionContainer}>
+                            <Text style={styles.question}>Correctly answered {correctAnswer } out of { questions.length }. </Text>
+
+                            <View style={styles.container2}>
+                                <TouchableOpacity style={styles.correctBtn} onPress={ this.startOver} >
+                                    <Text style={styles.btnText}> Start Over </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={styles.correctBtn} onPress={ this.backToDeckView} >
+                                    <Text style={styles.btnText}> Back to Deck View</Text>
+                                </TouchableOpacity>
+
+                            </View>
+
                         </View>
                     )
                 }
