@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, StyleSheet } from 'react-native'
+import { View, Text, TextInput, StyleSheet, Alert } from 'react-native'
 import { addCardToDeck, getDecks } from "../utils/api"
 import { connect } from 'react-redux'
 import { deckAction } from '../action'
@@ -21,23 +21,35 @@ class AddQuestion extends Component {
 
     submit = () => {
         const { question, answer } = this.state;
-        const { dispatch } = this.props;
         const { decks } = this.props;
         const card = {
             question: question,
             answer: answer
         }
 
-        const { deckTitle } = this.props.navigation.state.params
+        if (card.question === null || card.answer === null){
+            Alert.alert(
+                'Alert!',
+                'Missing field',
+                [
 
-        decks[deckTitle].questions.push(card);
+                    {text: 'OK', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                ],
+                { cancelable: false }
+            )
+        }
+        else{
+            const { deckTitle } = this.props.navigation.state.params
+
+            decks[deckTitle].questions.push(card);
 
 
-        addCardToDeck({ deckTitle, card }).then(() => {
-            dispatch(deckAction({decks}));
-            this.resetState;
-            this.props.navigation.goBack()
-        });
+            addCardToDeck({ deckTitle, card }).then(() => {
+                this.props.deckAction({decks});
+                this.resetState;
+                this.props.navigation.goBack()
+            });
+        }
 
     }
 
@@ -69,13 +81,11 @@ class AddQuestion extends Component {
     }
 }
 
-function mapStateToProps (decks) {
-    return {
-        decks: decks
-    }
-}
 
-export default connect(mapStateToProps)(AddQuestion)
+const mapStateToProps = decks=> ({decks: decks});
+
+
+export default connect(mapStateToProps, {deckAction})(AddQuestion)
 
 
 const styles = StyleSheet.create({

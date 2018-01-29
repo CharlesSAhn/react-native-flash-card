@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, StyleSheet } from 'react-native'
+import { View, Text, TextInput, StyleSheet, Alert } from 'react-native'
 import { getMetricMetaInfo } from "../utils/helpers";
 import SubmitButton from "./SubmitButton"
-import DateHeader from "./DateHeader"
 import { saveDeckTitle } from "../utils/api"
 import { connect } from 'react-redux'
 import { deckAction } from '../action'
@@ -22,28 +21,31 @@ class AddDeck extends Component {
                 questions: []
         }
 
-        //this.props.dispatch(deckAction(obj));
+        if (this.state.title === null){
+            Alert.alert(
+                'Alert!',
+                'Missing Title',
+                [
 
-        //TODO: Navigate to home
-        //this.props.navigation.tabBarOnPress
-
-        const key = title;
-        decks[key] = data;
-        saveDeckTitle({ key, data }).then(() => {
-            this.props.dispatch(deckAction(decks));
-            this.setState(() => ({ title: null}));
-
-            this.props.navigation.navigate(
-                'DeckDetail',
-                { deckTitle: key}
+                    {text: 'OK', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                ],
+                { cancelable: false }
             )
+        }
+        else{
+            const key = title;
+            decks[key] = data;
+            saveDeckTitle({ key, data }).then(() => {
+                this.props.deckAction(decks);
+                this.setState({ title: null});
+                this.props.navigation.goBack()
+                this.props.navigation.navigate(
+                    'DeckDetail',
+                    { deckTitle: key}
+                )
 
-        });
-
-
-
-
-
+            });
+        }
     }
 
     render() {
@@ -67,13 +69,10 @@ class AddDeck extends Component {
     }
 }
 
-function mapStateToProps (decks) {
-    return {
-        decks: decks
-    }
-}
 
-export default connect(mapStateToProps)(AddDeck)
+const mapStateToProps = decks=> ({decks: decks});
+
+export default connect(mapStateToProps, {deckAction})(AddDeck)
 
 
 const styles = StyleSheet.create({

@@ -52,10 +52,13 @@ class IndividualDeckView extends Component {
     startOver = () => {
         const { deckTitle } = this.props.navigation.state.params;
 
-        this.props.navigation.navigate(
-            'IndividualDeckDetail',
-            { deckTitle: deckTitle}
-        )
+        this.setState({
+            questionIndex: 0,
+            questionMode: true,
+            correctAnswer: 0,
+            questionLength: 0,
+            finishMode: false
+        })
     }
 
     backToDeckView = () => {
@@ -64,6 +67,7 @@ class IndividualDeckView extends Component {
             'DeckDetail',
             { deckTitle: deckTitle}
         )
+        this.props.navigation.goBack();
     }
 
 
@@ -147,11 +151,9 @@ class IndividualDeckView extends Component {
 
 }
 
-function mapStateToProps (decks) {
-    return {
-        decks: decks
-    }
-}
+
+const mapStateToProps = decks=> ({decks: decks});
+
 
 export default connect(mapStateToProps)(IndividualDeckView)
 

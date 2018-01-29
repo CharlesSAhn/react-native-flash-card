@@ -49,7 +49,6 @@ class Decks extends Component {
 
     componentDidMount() {
 
-       // const { dispatchDeck } = this.props;
         const { React, JavaScript  } = this.state;
         const { dispatch } = this.props;
 
@@ -102,17 +101,7 @@ class Decks extends Component {
     }
 }
 
-function mapStateToProps (decks) {
-    return {
-        decks: decks
-    }
-}
-
-// function mapDispatchToProps(dispatch){
-//     return {
-//         dispatchDeck: (data) => dispatch( deckAction(data) )
-//     }
-// }
+const mapStateToProps = decks=> ({decks: decks});
 
 export default connect(mapStateToProps)(Decks);
 

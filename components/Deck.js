@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity  } from 'react-native'
 import { connect } from 'react-redux'
 import { gray } from '../utils/colors'
+import { clearLocalNotification, setLocalNotification } from '../utils/helpers'
 
 
 class Deck extends Component {
@@ -23,6 +24,10 @@ class Deck extends Component {
     }
 
     startQuiz = () => {
+
+        clearLocalNotification()
+            .then(setLocalNotification)
+
         const { deckTitle } = this.props.navigation.state.params;
         this.props.navigation.navigate(
             'IndividualDeckDetail',
@@ -59,11 +64,8 @@ class Deck extends Component {
     }
 }
 
-function mapStateToProps (decks) {
-    return {
-        decks: decks
-    }
-}
+
+const mapStateToProps = decks=> ({decks: decks});
 
 export default connect(mapStateToProps)(Deck)
 
